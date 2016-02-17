@@ -20,7 +20,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         openPanel.allowsMultipleSelection = true
         if (openPanel.runModal() != NSFileHandlingPanelOKButton) { return }
         
-        application(NSApp, openFiles: openPanel.URLs.map({ $0.path! }))
+        application(NSApp, openFiles: openPanel.URLs.flatMap({ $0.path }))
     }
 
     func application(sender: NSApplication, openFiles filenames: [String]) {
@@ -39,7 +39,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
             let text = textField.stringValue.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "0123456789,-").invertedSet)
             let components = text.componentsSeparatedByString(",")
-            for component in components { pageRanges.append(component.componentsSeparatedByString("-").map({ UInt32($0)! })) }
+            for component in components { pageRanges.append(component.componentsSeparatedByString("-").flatMap({ UInt32($0) })) }
             
             let printedPageRanges = printPDF(NSURL(fileURLWithPath: path), pageRanges: pageRanges)
             print("\(path): printed pages in ranges \(printedPageRanges)")
